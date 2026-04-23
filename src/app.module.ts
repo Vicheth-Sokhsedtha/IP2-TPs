@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 // import { Receipt } from './database/entities/receipts.entity';
 import { ReceiptsModule } from './receicpts/receipts.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { NotificationsModule } from './notifications/notifications.module';
+import { OrdersModule } from './orders/orders.module';
+import { CoreModule } from './core/core.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -16,6 +19,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       synchronize: true, //auto create tables based on entities, not recommended for production
     }),
     ReceiptsModule,
+    NotificationsModule,
+    OrdersModule,
+    CoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],

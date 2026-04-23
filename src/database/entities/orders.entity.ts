@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('receipts')
-export class Receipt {
+@Entity('orders')
+export class Order {
   @PrimaryGeneratedColumn()
-  receiptId: number;
+  orderId: number;
 
   @Column({ type: 'timestamp' }) // Or 'date' depending on your DB
   issuedAt: Date;
@@ -13,4 +13,7 @@ export class Receipt {
 
   @Column('float')
   price: number;
+
+  @Column()
+  quantity: number;
 }
