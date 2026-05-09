@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 // import { OrdersModule } from 'src/orders/orders.module';
 import { CoreModule } from 'src/core/core.module';
+// import { Receipt } from 'src/database/entities/receipts.entity';
+import { ReceiptsModule } from 'src/receicpts/receipts.module';
 
 @Module({
   providers: [NotificationsService],
@@ -13,7 +15,11 @@ import { CoreModule } from 'src/core/core.module';
 //   exports: [NotificationsService],
 // })
 @Module({
-  imports: [CoreModule],
+  // imports: [CoreModule, ReceiptsModule],
+  imports: [
+    forwardRef(() => CoreModule), // Use forwardRef to avoid circular dependency
+    forwardRef(() => ReceiptsModule), // Use forwardRef to avoid circular dependency
+  ],
   providers: [NotificationsService],
   exports: [NotificationsService],
 })

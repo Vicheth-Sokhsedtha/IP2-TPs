@@ -7,7 +7,7 @@ import { OrdersService } from './orders.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Order]),  // ← registers OrderRepository
+    TypeOrmModule.forFeature([Order]), // ← registers OrderRepository
     NotificationsModule,
   ],
   controllers: [OrdersController],

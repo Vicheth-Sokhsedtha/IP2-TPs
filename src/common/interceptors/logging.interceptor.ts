@@ -1,26 +1,33 @@
 import {
-  CallHandler,
-  ExecutionContext,
   Injectable,
   NestInterceptor,
+  ExecutionContext,
+  CallHandler,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, tap } from 'rxjs';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+
+    // REST request
     const req = context.switchToHttp().getRequest();
+
+    // If GraphQL request has no req object
+    if (!req) {
+      console.log('GraphQL Request');
+
+      return next.handle().pipe(
+        tap(() => console.log('GraphQL Response')),
+      );
+    }
+
     const { method, url } = req;
 
-    const start = Date.now();
+    console.log(`${method} ${url}`);
+
     return next.handle().pipe(
-      tap(() => {
-        const ms = Date.now() - start;
-        console.log(`[HTTP] ${method} ${url} - ${ms}ms`);
-      }),
+      tap(() => console.log('Request completed')),
     );
   }
 }
-
-export {};

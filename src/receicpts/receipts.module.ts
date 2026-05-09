@@ -10,5 +10,6 @@ import { NotificationsModule } from 'src/notifications/notifications.module';
   imports: [TypeOrmModule.forFeature([Receipt]), NotificationsModule],
   controllers: [ReceiptsController],
   providers: [ReceiptsService],
+  exports: [ReceiptsService], // Export the service to be used in other modules
 })
 export class ReceiptsModule {}
