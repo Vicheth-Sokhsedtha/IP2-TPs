@@ -1,0 +1,43 @@
+import {
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  split,
+} from '@apollo/client/core';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+import { getMainDefinition } from '@apollo/client/utilities';
+
+const hasuraHeaders = import.meta.env.VITE_HASURA_ADMIN_SECRET
+  ? { 'x-hasura-admin-secret': import.meta.env.VITE_HASURA_ADMIN_SECRET }
+  : { 'x-hasura-role': import.meta.env.VITE_HASURA_ROLE || 'anonymous' };
+
+const httpLink = new HttpLink({
+  uri: import.meta.env.VITE_HASURA_HTTP,
+  headers: hasuraHeaders,
+});
+
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: import.meta.env.VITE_HASURA_WS,
+    connectionParams: async () => ({
+      headers: hasuraHeaders,
+    }),
+  }),
+);
+
+const link = split(
+  ({ query }) => {
+    const def = getMainDefinition(query);
+    return (
+      def.kind === 'OperationDefinition' && def.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink,
+);
+
+export const apolloClient = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
